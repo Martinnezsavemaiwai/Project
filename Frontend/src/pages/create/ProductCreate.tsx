@@ -1,25 +1,34 @@
-import { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Layout, InputNumber, message } from 'antd';
-import { Link } from 'react-router-dom';
+import { useEffect , useState } from 'react';
+import { Form, Input, Select, Layout, InputNumber, message } from 'antd';
 import { CategoryInterface } from '../../interfaces/ICategory';
 import { ProductInterface } from '../../interfaces/IProduct';
 import { CreateImage, CreateProduct, GetBrands, GetCategories } from '../../services/http';
+import { CloseCircleOutlined } from '@ant-design/icons';
 import { BrandInterface } from '../../interfaces/IBrand';
 import Header from '../../components/Header';
 import { Content } from 'antd/es/layout/layout';
-import '../../stylesheet/ProductFormPage.css';
+import '../../components/ProductFormPage.css'
+import SubmitButton from '../../components/SubmitButton';
+import CancelButton from '../../components/CancelButton';
 
 const { Option } = Select;
 
+interface ImageFile {
+  id: number;
+  file: File;
+  preview: string;
+}
+
+
 function ProductCreate() {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<ImageFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [brands, setBrands] = useState<BrandInterface[]>([]);
   const [form] = Form.useForm();
 
-  console.log(images);
+
 
 
   const onFinish = async (values: any) => {
@@ -31,15 +40,15 @@ function ProductCreate() {
         Description: values.Description,
         PricePerPiece: values.PricePerPiece,
         Stock: values.Stock,
-        BrandId: values.BrandId,
-        CategoryId: values.CategoryId,
+        BrandID: values.BrandID,
+        CategoryID: values.CategoryID,
       };
 
       const res = await CreateProduct(dataProduct);
 
       const formData = new FormData();
       for (const image of images) {
-        formData.append('image', image);
+        formData.append('image', image.file);
       }
 
       CreateImage(formData, res.data.ID)
@@ -80,10 +89,22 @@ function ProductCreate() {
     }
   };
 
-  const handleImageChange = (e: any) => {
-    const file = e.target.files
-    setImages(file);
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newImages = Array.from(e.target.files).map((file, index) => ({
+        id: Date.now() + index,
+        file,
+        preview: URL.createObjectURL(file),
+      }));
+      setImages((prevImages) => [...prevImages, ...newImages]);
+
+    }
   };
+
+  const handleRemoveImage = (id: number) => {
+    setImages(images.filter((img) => img.id !== id));
+  };
+
 
   useEffect(() => {
     getBrands();
@@ -99,26 +120,12 @@ function ProductCreate() {
         <Layout
           style={{
             minHeight: '100vh',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
           }}
         >
           <Content
-            style={{
-              padding: '20px',
-              maxWidth: '800px',
-              width: '100%',
-            }}
           >
             <div
               className="form-container"
-              style={{
-                background: '#fff',
-                padding: '40px',
-                borderRadius: '8px',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-              }}
             >
               <Form
                 form={form}
@@ -196,7 +203,7 @@ function ProductCreate() {
                 </Form.Item>
 
                 <Form.Item
-                  name="BrandId"
+                  name="BrandID"
                   label="Brand"
                   rules={[
                     {
@@ -216,7 +223,7 @@ function ProductCreate() {
                 </Form.Item>
 
                 <Form.Item
-                  name="CategoryId"
+                  name="CategoryID"
                   label="Category"
                   rules={[
                     {
@@ -245,7 +252,31 @@ function ProductCreate() {
                   ]}
                   style={{ flex: '0 0 100%' }}
                 >
-                  <input type="file" className='input-file' multiple onChange={handleImageChange} />
+                  <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImageUpload}
+                        style={{ marginBottom: '16px' }}
+                      />
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                      {images.map((image) => (
+                        <div key={image.id} className="image-preview-container">
+                          <img
+                            src={image.preview}
+                            alt="preview"
+                            style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                          />
+                          <CloseCircleOutlined
+                            className="close-icon"
+                            onClick={() => handleRemoveImage(image.id)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
 
                 </Form.Item>
 
@@ -253,19 +284,8 @@ function ProductCreate() {
                 <Form.Item
                   style={{ width: '100%', textAlign: 'center' }}
                 >
-                  <Link to="/">
-                    <Button id="cancel-bt" type="default">
-                      Cancel
-                    </Button>
-                  </Link>
-                  <Button
-                    id="submit-bt"
-                    type="primary"
-                    htmlType="submit"
-                    loading={loading}
-                  >
-                    Submit
-                  </Button>
+                  <CancelButton to="/" />
+                 <SubmitButton loading={loading} />
                 </Form.Item>
               </Form>
             </div>

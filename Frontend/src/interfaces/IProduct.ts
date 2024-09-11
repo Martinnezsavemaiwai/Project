@@ -4,6 +4,6 @@ export interface ProductInterface {
     Description?: string;    
     PricePerPiece?:number;   
     Stock?:number;
-    CategoryId?: number; 
-    BrandId?: number;
+    CategoryID?: number; 
+    BrandID?: number;
 } 

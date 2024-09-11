@@ -103,5 +103,32 @@ func DeleteProduct(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
 }
 
+// func GetFilteredProducts(c *gin.Context) {
+//     var products []entity.Product
+//     db := config.DB()
+
+//     // Extract filters from query parameters
+//     brandID := c.Query("brand")
+//     categoryID := c.Query("category")
+
+//     query := db.Preload("Category").Preload("Brand").Preload("Images")
+
+//     if brandID != "" {
+//         query = query.Where("brand_id = ?", brandID)
+//     }
+
+//     if categoryID != "" {
+//         query = query.Where("category_id = ?", categoryID)
+//     }
+
+//     if err := query.Find(&products).Error; err != nil {
+//         c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching products"})
+//         return
+//     }
+
+//     c.JSON(http.StatusOK, products)
+// }
+
+
 
 

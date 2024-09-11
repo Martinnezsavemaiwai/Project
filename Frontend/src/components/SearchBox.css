@@ -1,42 +1,72 @@
+@import "../stylesheet/ColorSheet.css";
+
 .search-bar {
-    margin-top: 22px ;
+    margin-top: 22px;
     background-color: white;
     margin-left: 20px;
-    width: 550px; /* Adjust width as needed */
-    height: 40px; /* Adjust height as needed */
+    width: 100%; /* ใช้ 100% เพื่อให้ปรับขนาดตาม parent */
+    max-width: 550px; /* จำกัดความกว้างสูงสุด */
+    height: 40px;
     border: 2px solid var(--subtheme-color2);
     border-radius: 40px;
     overflow: hidden;
     display: flex;
     align-items: center;
     padding-left: 10px;
-    min-width: 340px; 
-    box-sizing: border-box; 
+    min-width: 320px;
+    box-sizing: border-box;
 }
 
 .search-bar input {
-    padding-left: 10px;
-    width: calc(100% - 40px); 
-    border: none; 
+    flex: 1; /* ใช้ flex เพื่อให้ input ยืดหยุ่น */
+    border: none;
     font-size: 19px;
-    height: 100%; 
-    box-sizing: border-box; 
+    height: 100%;
+    padding-left: 10px;
+    box-sizing: border-box;
 }
 
 .search-bar input:focus-visible {
-    outline: none; 
+    outline: none;
 }
 
 .search-bar .img-box {
-    width: 40px; 
-    height: 100%; 
+    width: 40px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--subtheme-color3); 
+    background-color: var(--subtheme-color3);
 }
 
 .search-bar .img-box img {
-    width: 20px; 
-    height: auto; 
+    width: 20px;
+    height: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-bar {
+        width: 100%; /* ใช้เต็มความกว้างหน้าจอ */
+        max-width: 100%;
+        margin-left: 0; /* ปรับให้ชิดขอบ */
+    }
+}
+
+@media (max-width: 480px) {
+    .search-bar {
+        height: 35px; /* ลดความสูง */
+    }
+    
+    .search-bar input {
+        font-size: 16px; /* ลดขนาด font */
+    }
+    
+    .search-bar .img-box {
+        width: 35px; /* ปรับขนาด icon */
+    }
+    
+    .search-bar .img-box img {
+        width: 18px;
+    }
 }

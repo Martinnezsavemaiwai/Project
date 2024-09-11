@@ -28,6 +28,7 @@ func main() {
 		router.POST("/products", controller.CreateProduct)
 		router.PATCH("/products/:id", controller.UpdateProduct)
 		router.DELETE("/products/:id", controller.DeleteProduct)
+		// router.GET("/products", controller.GetFilteredProducts)
 
 		// Brand Routes
 		router.GET("/brands", controller.ListBrands)
@@ -43,7 +44,7 @@ func main() {
 		router.GET("/images", controller.ListImages)
 		router.GET("/product-images/:productId", controller.GetImageByProductByID)
 		router.POST("/product-image/:productId", controller.CreateImage)
-		router.PATCH("/product-image/:imageId", controller.UpdateImage)
+		router.PUT("/product-image/:id", controller.UpdateImage)
 	}
 
 	r.GET("/", func(c *gin.Context) {

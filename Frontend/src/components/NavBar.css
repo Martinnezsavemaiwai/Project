@@ -2,14 +2,14 @@
   width: 100vw;
   padding-right: 33px;
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
-  background-color: #F6F9FC; 
+  background-color: #F6F9FC;
 }
 
 .Search-Product {
-  flex: 1; 
-  max-width: 600px; 
+  flex: 1;
+  max-width: 600px;
 }
 
 .new-product-btn {
@@ -25,23 +25,49 @@
   padding: 8px 16px;
   display: flex;
   align-items: center;
-  justify-content: center; 
-  transition: background-color 0.3s ease; 
+  justify-content: center;
+  transition: background-color 0.3s ease;
 }
 
 .new-product-btn:hover {
-  background-color: #e40057; 
+  background-color: white;
+  color: #FF2E63;
 }
 
-.SelectBC{
+/* Flexbo alignment for Select and Filter */
+.SelectBC,
+.filter-Content {
   display: flex;
-  justify-content: end;
-
-  
+  justify-content: flex-end;
 }
 
-.filter-Content{
-  display: flex;
-  justify-content: end;
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
 
+  .new-product-btn {
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  .Search-Product {
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-product-btn {
+    font-size: 16px;
+    padding: 6px 12px;
+    height: 45px;
+  }
+
+  .Search-Product {
+    max-width: 100%;
+    margin-bottom: 5px;
+  }
 }

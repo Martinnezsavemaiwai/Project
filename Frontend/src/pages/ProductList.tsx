@@ -8,9 +8,7 @@ import { ProductInterface } from '../interfaces/IProduct';
 import { ImageInterface } from '../interfaces/IImage';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
-import '../stylesheet/ProductListPage.css';
-
-
+import '../components/ProductListPage.css';
 function ProductList() {
     const navigate = useNavigate();
     const [products, setProducts] = useState<ProductInterface[]>([]);
@@ -29,6 +27,7 @@ function ProductList() {
     useEffect(() => {
         getProducts();
     }, []);
+    console.log(products);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('th-TH').format(price) + ' ฿';
@@ -37,12 +36,12 @@ function ProductList() {
     const handleEdit = (id: number) => {
         navigate(`/Product/Edit/${id}`);    };
 
-        const handleDelete = (id: number) => {
-            const product = products.find(p => p.ID === id);
-            setModalText(`คุณต้องการลบสินค้าชื่อ "${product?.ProductName}" หรือไม่ ?`);
-            setDeleteId(id);
-            setModalVisible(true);
-        };
+    const handleDelete = (id: number) => {
+        const product = products.find(p => p.ID === id);
+        setModalText(`คุณต้องการลบสินค้าชื่อ "${product?.ProductName}" หรือไม่ ?`);
+        setDeleteId(id);
+        setModalVisible(true);
+    };
 
     const handleOk = async () => {
         if (deleteId === undefined) {
@@ -80,11 +79,11 @@ function ProductList() {
         },
         {
             title: 'Image',
-            dataIndex: 'Image',
+            dataIndex: 'Images', 
             key: 'Image',
             align: 'center',
-            render: (imageArray: ImageInterface[]) => {
-                const imageFilePath = imageArray && imageArray.length > 0 ? imageArray[0].FilePath : ''; // ใช้รูปภาพที่ index 0
+            render: (images: ImageInterface[]) => {
+                const imageFilePath = images && images.length > 0 ? images[0].FilePath : ''; 
                 return imageFilePath ? (
                     <img src={`${apiUrl}/${imageFilePath}`} alt="Product" style={{ maxWidth: '100px', height: 'auto' }} />
                 ) : 'No Image';
@@ -94,6 +93,12 @@ function ProductList() {
             title: 'Product Name',
             dataIndex: 'ProductName',
             key: 'ProductName',
+            align: 'center',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'Description',
+            key: 'Description',
             align: 'center',
         },
         {
@@ -127,12 +132,12 @@ function ProductList() {
             title: 'Action',
             key: 'action',
             align: 'center',
-            render: (text, record: ProductInterface) => (
+            render: (record: ProductInterface) => (
                 <Space size="middle">
                     <Button onClick={() => handleEdit(record?.ID ?? 0)} type="primary">Edit</Button>
                     <Button onClick={() => handleDelete(record?.ID ?? 0)} type="default">Delete</Button>
                 </Space>
-            ),
+            )
         },
     ];
 

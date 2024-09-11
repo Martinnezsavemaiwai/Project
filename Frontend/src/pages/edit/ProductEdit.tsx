@@ -7,19 +7,28 @@ import { GetProductByID, UpdateProduct, GetBrands, GetCategories, UpdateImage } 
 import { BrandInterface } from '../../interfaces/IBrand';
 import Header from '../../components/Header';
 import { Content } from 'antd/es/layout/layout';
-import '../../stylesheet/ProductFormPage.css';
+import '../../components/ProductFormPage.css';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
+interface ImageFile {
+  id: number;
+  file: File;
+  preview: string;
+}
+
 function ProductEdit() {
-  const { id } = useParams<{ id: string }>(); // Get product ID from the route
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<ImageFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [brands, setBrands] = useState<BrandInterface[]>([]);
   const [product, setProduct] = useState<ProductInterface | null>(null);
   const [form] = Form.useForm();
+
+  let { id } = useParams();
+
 
   // Fetch product data by ID
   const fetchProduct = async () => {
@@ -46,39 +55,49 @@ function ProductEdit() {
   };
 
   // Handle image change
-  const handleImageChange = (e: any) => {
-    const file = e.target.files;
-    setImages(file);
-  };
+  // const handleImageChange = (e: any) => {
+  //   const file = e.target.files;
+  //   setImages(file);
+  // };
 
   // Handle form submit
   const onFinish = async (values: any) => {
     try {
       setLoading(true);
-
+  
       const updatedProduct: ProductInterface = {
         ...product,
         ProductName: values.ProductName,
         Description: values.Description,
         PricePerPiece: values.PricePerPiece,
         Stock: values.Stock,
-        BrandId: values.BrandId,
-        CategoryId: values.CategoryId,
+        BrandID: values.BrandID,
+        CategoryID: values.CategoryID,
       };
-
+  
+      // Update product information first
       const res = await UpdateProduct(Number(id), updatedProduct);
       console.log('Product update response:', res);
-
-
-      if (images.length > 0) {
-        const formData = new FormData();
-        for (const image of images) {
-          formData.append('image', image);
-        }
-        await UpdateImage(formData, Number(id));
-      }
-
+  
       if (res) {
+        // Update images if any
+        if (images.length > 0) {
+          const formData = new FormData();
+          for (const image of images) {
+            formData.append('image', image.file); // Ensure that this matches the server-side field name
+          }
+          
+          // Update the image
+          const imageRes = await UpdateImage(formData, Number(id));
+          
+          if (!imageRes) {
+            messageApi.open({
+              type: 'error',
+              content: 'Error occurred while updating images!',
+            });
+          }
+        }
+  
         messageApi.open({
           type: 'success',
           content: 'Product updated successfully',
@@ -99,6 +118,24 @@ function ProductEdit() {
       setLoading(false);
     }
   };
+  
+
+  
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newImages = Array.from(e.target.files).map((file, index) => ({
+        id: Date.now() + index,
+        file,
+        preview: URL.createObjectURL(file),
+      }));
+      setImages((prevImages) => [...prevImages, ...newImages]);
+    }
+  };
+
+  const handleRemoveImage = (id: number) => {
+    setImages(images.filter((img) => img.id !== id));
+  };
+
 
   useEffect(() => {
     getBrands();
@@ -211,7 +248,7 @@ function ProductEdit() {
                 </Form.Item>
 
                 <Form.Item
-                  name="BrandId"
+                  name="BrandID"
                   label="Brand"
                   rules={[
                     {
@@ -231,7 +268,7 @@ function ProductEdit() {
                 </Form.Item>
 
                 <Form.Item
-                  name="CategoryId"
+                  name="CategoryID"
                   label="Category"
                   rules={[
                     {
@@ -253,9 +290,46 @@ function ProductEdit() {
                 <Form.Item
                   name="Picture"
                   label="Images"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please upload the product images!',
+                    },
+                  ]}
                   style={{ flex: '0 0 100%' }}
                 >
-                  <input type="file" className="input-file" multiple onChange={handleImageChange} />
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageUpload}
+                      style={{ marginBottom: '16px' }}
+                    />
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                      {images.map((image) => (
+                        <div key={image.id} style={{ position: 'relative' }}>
+                          <img
+                            src={image.preview}
+                            alt="preview"
+                            style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                          />
+                          <CloseCircleOutlined
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              right: 0,
+                              color: 'red',
+                              fontSize: '20px',
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => handleRemoveImage(image.id)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                 </Form.Item>
 
                 <Form.Item

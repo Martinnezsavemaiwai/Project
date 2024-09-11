@@ -1,0 +1,90 @@
+/* Layout */
+.my-layout1 {
+    position: fixed;
+    width: 100vw;
+    margin-top: 75px;
+    height: calc(100vh - 75px);
+    overflow: auto;
+    display: flex;
+    padding-bottom: 20px;
+    background-color: #F6F9FC;
+}
+
+/* Table */
+.product-table {
+    width: 100%;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+/* Image in Table */
+.product-table img {
+    max-width: 100px;
+    height: auto;
+}
+
+/* Action buttons */
+.product-table .ant-btn {
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.product-table .ant-btn-primary {
+    background-color: #1890ff;
+    border-color: #1890ff;
+    color: white;
+}
+
+.product-table .ant-btn-default {
+    background-color: #fff;
+    border-color: #d9d9d9;
+    color: #000;
+}
+
+.product-table .ant-btn-primary:hover,
+.product-table .ant-btn-default:hover {
+    background-color: #40a9ff;
+    color: white;
+}
+
+.product-table .ant-btn-danger {
+    background-color: red;
+    color: white;
+    border: none;
+}
+
+.product-table .ant-btn-danger:hover {
+    background-color: #ff4d4f;
+    color: white;
+}
+
+/* Modal */
+.ant-modal-title {
+    font-size: 18px;
+    color: #333;
+}
+
+.ant-modal-body {
+    font-size: 16px;
+    color: #555;
+}
+
+.product-table-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 20px;
+    /* เว้นช่องว่างระหว่างตารางกับขอบล่าง */
+}
+
+/* Responsive Design for table container */
+@media (max-width: 768px) {
+    .product-table-container {
+        margin-bottom: 40px;
+        /* เพิ่ม margin สำหรับหน้าจอขนาดเล็ก */
+    }
+}

@@ -67,7 +67,7 @@ async function GetProductByID(productID: number): Promise<ProductInterface | fal
 }
 
 
-async function UpdateProduct(id: number | undefined, data: ProductInterface) {
+async function UpdateProduct(id: number, data: ProductInterface) {
     if (id === undefined) {
         throw new Error("Product ID is undefined");
     }
@@ -95,22 +95,25 @@ async function UpdateProduct(id: number | undefined, data: ProductInterface) {
 
 
 
-async function DeleteProductByID(id: Number | undefined) {
+async function DeleteProductByID(id: number) {
+    if (!id) {
+        console.error('Product ID is required to delete');
+        return false;
+    }
+
     const requestOptions = {
         method: "DELETE"
     };
 
-    let res = await fetch(`${apiUrl}/products/${id}`, requestOptions)
-        .then((res) => {
-            if (res.status == 200) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-    return res;
+    try {
+        const res = await fetch(`${apiUrl}/products/${id}`, requestOptions);
+        return res.status === 200;
+    } catch (error) {
+        console.error('Error occurred while deleting product:', error);
+        return false;
+    }
 }
+
 
 
 async function GetBrands() {
@@ -221,7 +224,7 @@ async function GetImageByProductID(id: Number | undefined) {
         },
     };
 
-    let res = await fetch(`${apiUrl}/images/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/product-images/${id}`, requestOptions)
         .then((res) => {
             if (res.status == 200) {
                 return res.json();
@@ -253,25 +256,63 @@ async function CreateImage(formData: FormData,id: Number | undefined) {
     return res;
   }
 
-async function UpdateImage(formData: FormData,id: Number | undefined) {
+  async function UpdateImage(formData: FormData, id: number) {
+    if (!id) {
+        console.error('Image ID is required to update');
+        return false;
+    }
+
     const requestOptions = {
-      method: "PATCH",
-      // headers: { "Content-Type": "application/json" },
-      body: formData,
+        method: "PUT",
+        body: formData,
     };
-  
-    let res = await fetch(`${apiUrl}/product-image/${id}`, requestOptions).then(
-      (res) => {
-        if (res.status == 200) {
-          return res.json();
+
+    try {
+        const res = await fetch(`${apiUrl}/product-image/${id}`, requestOptions);
+        if (res.status === 200) {
+            return await res.json();
         } else {
-          return false;
+            console.error("Failed to update image:", res.status, res.statusText);
+            return false;
         }
-      }
-    );
-  
-    return res;
-  }
+    } catch (error) {
+        console.error('Error occurred while updating image:', error);
+        return false;
+    }
+}
+
+
+
+
+// Fetch filtered products
+async function GetFilteredProducts(brandId?: string, categoryId?: string): Promise<ProductInterface[] | false> {
+    const query = new URLSearchParams();
+    if (brandId) query.append('brand', brandId);
+    if (categoryId) query.append('category', categoryId);
+
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    };
+
+    try {
+        const response = await fetch(`${apiUrl}/products?${query.toString()}`, requestOptions);
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.error("Failed to fetch filtered products:", response.status, response.statusText);
+            return false;
+        }
+    } catch (error) {
+        console.error("Error fetching filtered products:", error);
+        return false;
+    }
+}
+
+
+
 
 
   
@@ -282,6 +323,7 @@ export {
     GetProductByID,
     UpdateProduct,
     DeleteProductByID,
+    GetFilteredProducts,
 
     GetBrands,
 
@@ -294,4 +336,5 @@ export {
     GetImageByProductID,   
     CreateImage,
     UpdateImage
+
 }
