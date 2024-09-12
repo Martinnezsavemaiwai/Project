@@ -35,11 +35,10 @@ function ProductEdit() {
     const res = await GetProductByID(Number(id));
     if (res) {
       setProduct(res);
-      form.setFieldsValue(res); // Populate form with product data
+      form.setFieldsValue(res); 
     }
   };
 
-  // Fetch brands and categories
   const getBrands = async () => {
     const res = await GetBrands();
     if (res) {
@@ -54,13 +53,7 @@ function ProductEdit() {
     }
   };
 
-  // Handle image change
-  // const handleImageChange = (e: any) => {
-  //   const file = e.target.files;
-  //   setImages(file);
-  // };
 
-  // Handle form submit
   const onFinish = async (values: any) => {
     try {
       setLoading(true);
@@ -145,7 +138,7 @@ function ProductEdit() {
   return (
     <>
       {contextHolder}
-      <Header />
+      <Header page={undefined} />
       <div className="my-layout1">
         <Layout
           style={{

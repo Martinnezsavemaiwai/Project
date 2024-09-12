@@ -3,10 +3,16 @@ import './Select.css'
 import { BrandInterface } from '../interfaces/IBrand';
 import { useEffect, useState } from 'react';
 import { GetBrands } from '../services/http';
+
 const { Option } = Select;
 
-function SelectBrand() {
+interface SelectBrandProps {
+    onBrandChange: (brand: string) => void;
+}
+
+function SelectBrand({ onBrandChange }: SelectBrandProps) {
     const [brands, setBrands] = useState<BrandInterface[]>([]);
+
     const getBrands = async () => {
         try {
             const res = await GetBrands();
@@ -14,7 +20,7 @@ function SelectBrand() {
                 setBrands(res);
             }
         } catch (error) {
-            console.error('Failed to fetch categories:', error);
+            console.error('Failed to fetch brands:', error);
         }
     };
 
@@ -24,20 +30,12 @@ function SelectBrand() {
 
     return (
         <div className="SelectBrand">
-            <Form
-                layout="inline"
-                initialValues={{
-                    brand: ''
-                }}
-                onFinish={(values) => {
-                    console.log('Form values:', values);
-                }}
-            >
-                <Form.Item
-                    name="brand"
-                    label="Brand"
-                >
-                    <Select placeholder="Select Product Brand">
+            <Form layout="inline">
+                <Form.Item name="brand" label="Brand">
+                    <Select 
+                        placeholder="Select Product Brand"
+                        onChange={value => onBrandChange(value)}
+                    >
                         {brands.length > 0 ? (
                             brands.map((item) => (
                                 <Option value={item.ID?.toString()} key={item.ID ?? ''}>
@@ -45,7 +43,7 @@ function SelectBrand() {
                                 </Option>
                             ))
                         ) : (
-                            <Option value="">Select Product Brand</Option>
+                            <Option value="">No brands found</Option>
                         )}
                     </Select>
                 </Form.Item>

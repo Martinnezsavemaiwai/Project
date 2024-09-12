@@ -1,7 +1,26 @@
-import { ImageInterface } from "../../interfaces/IImage";
+import { OwnerInterface } from "../../interfaces/IOwner";
 import { ProductInterface } from "../../interfaces/IProduct";
+import { SignInInterface } from "../../interfaces/ISignIn";
 
 export const apiUrl = "http://localhost:8000";
+
+async function OwnerSignIn(data: SignInInterface) {
+    const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    };
+    
+    let res = await fetch(`${apiUrl}/signin`, requestOptions).then((res) => {
+        if (res.status == 200) {
+            return res.json();
+        } else {
+            return false;
+        }
+    });
+    
+    return res;
+}
 
 async function CreateProduct(data: ProductInterface) {
     const requestOptions = {
@@ -156,6 +175,23 @@ async function GetCategories() {
 
     return res;
 }
+
+async function CreateOwner(data: OwnerInterface) {
+    const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    };
+  
+    return await fetch(`${apiUrl}/owners`, requestOptions)
+        .then((res) => {
+            if (res.status == 201) {
+                return res.json();
+            } else {
+                return false;
+            }
+        });
+    }
 
 async function GetOwner() {
     const requestOptions = {
@@ -315,6 +351,8 @@ async function GetFilteredProducts(brandId?: string, categoryId?: string): Promi
   
 
 export {
+    OwnerSignIn,
+    
     CreateProduct,
     ListProducts,
     GetProductByID,
@@ -325,7 +363,8 @@ export {
     GetBrands,
 
     GetCategories,
-
+    
+    CreateOwner,
     GetOwner,
     GetOwnerById,
     

@@ -1,0 +1,161 @@
+@import "../stylesheet/ColorSheet.css";
+
+.combined-filter{
+    display: flex;
+    flex-direction: row;
+}
+.flex-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px; /* Space below the component */
+}
+
+.search-bar {
+    margin-bottom: 5px;
+    background-color: white;
+    margin-left: 100px;
+    width: 100%; 
+    max-width: 550px; 
+    height: 40px;
+    border: 2px solid var(--subtheme-color2);
+    border-radius: 40px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    min-width: 550px; 
+    box-sizing: border-box; 
+}
+
+.search-bar input {
+    flex: 1; 
+    border: none;
+    font-size: 19px;
+    height: 100%;
+    padding-left: 10px;
+    box-sizing: border-box;
+}
+
+.search-bar input:focus-visible {
+    outline: none; 
+}
+
+.search-bar .img-box {
+    width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--subtheme-color3); 
+}
+
+.img-box{
+    cursor: pointer;
+}
+
+.search-input{
+    cursor: text;
+}
+
+.search-bar .img-box img {
+    width: 20px;
+    height: auto; 
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-bar {
+        width: 100%; 
+        max-width: 100%;
+        margin-left: 0; 
+    }
+}
+
+@media (max-width: 480px) {
+    .search-bar {
+        height: 35px; 
+    }
+
+    .search-bar input {
+        font-size: 16px; 
+        padding-left: 8px; 
+    }
+
+    .search-bar .img-box {
+        width: 35px;
+    }
+
+    .search-bar .img-box img {
+        width: 18px; 
+    }
+}
+
+.filters {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 550px;
+}
+
+.filters-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.filters-form .ant-form-item {
+    margin-top: 10px;
+    max-width: 300px; /* Max width limit */
+}
+
+/* Label Styling */
+.filters-form .ant-form-item-label {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* Select dropdown styling */
+.filters-form .ant-select {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filters-form .ant-select-selector {
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Customize the dropdown arrow color */
+.filters-form .ant-select-arrow {
+    color: #FF2E63; /* Highlight color */
+}
+
+/* Responsive Design for medium screens */
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column; /* Vertical layout on smaller screens */
+        align-items: flex-start; /* Align items to start */
+    }
+    
+    .filters-form .ant-form-item {
+        max-width: 100%; /* Full width on small screens */
+    }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+    .filters-form .ant-form-item-label {
+        font-size: 16px; /* Smaller font size */
+    }
+    
+    .filters-form .ant-select {
+        font-size: 14px; /* Smaller font size for select dropdown */
+    }
+}

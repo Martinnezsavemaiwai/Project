@@ -1,22 +1,36 @@
-import './App.css'
+import React, { createContext, useState } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import ConfigRoutes from "./routes";
+import "./App.css";
+import { message } from "antd";
 
-import 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import ProductList from './pages/ProductList';
-import ProductCreate from './pages/create/ProductCreate';
-import ProductEdit from './pages/edit/ProductEdit';
+export const AppContext = createContext<{
+    logoutPopup: any,
+    setLogoutPopup: (param: any) => void,
+    messageApiLogout: any,
+    contextHolderLogout: React.ReactElement | null,
+}>({
+    logoutPopup: null,
+    setLogoutPopup: () => {},
+    messageApiLogout: null,
+    contextHolderLogout: null,
+});
 
-function App() {
+const App: React.FC = () => {
+    const [logoutPopup, setLogoutPopup] = useState(null)
+    const [messageApiLogout, contextHolderLogout] = message.useMessage();
     return (
-        <BrowserRouter>
-            <Routes>ProductList
-                <Route path="/" element={<ProductList/>} />
-                <Route path='/Product/Create' element={<ProductCreate/>} />
-                <Route path='/Product/Edit/:id' element={<ProductEdit/>} />
-                
-            </Routes>
-        </BrowserRouter>
-    )
-}
+        <Router>
+            <AppContext.Provider value={{
+                logoutPopup,
+                setLogoutPopup,
+                contextHolderLogout,
+                messageApiLogout
+            }}> 
+                <ConfigRoutes />
+            </AppContext.Provider>
+        </Router>
+    );
+};
 
-export default App
+export default App;

@@ -6,9 +6,13 @@ import { GetCategories } from '../services/http';
 
 const { Option } = Select;
 
-function SelectCategory() {
+interface SelectCategoryProps {
+    onCategoryChange: (category: string) => void;
+}
+
+function SelectCategory({ onCategoryChange }: SelectCategoryProps) {
     const [categories, setCategories] = useState<CategoryInterface[]>([]);
-    
+
     const getCategories = async () => {
         try {
             const res = await GetCategories();
@@ -26,20 +30,12 @@ function SelectCategory() {
 
     return (
         <div className="SelectCate">
-            <Form
-                layout="inline"
-                initialValues={{
-                    category: ''
-                }}
-                onFinish={(values) => {
-                    console.log('Form values:', values);
-                }}
-            >
-                <Form.Item
-                    name="category"
-                    label="Category"
-                >
-                    <Select placeholder="Select Product Category">
+            <Form layout="inline">
+                <Form.Item name="category" label="Category">
+                    <Select 
+                        placeholder="Select Product Category"
+                        onChange={value => onCategoryChange(value)}
+                    >
                         {categories.length > 0 ? (
                             categories.map((item) => (
                                 <Option value={item.ID?.toString()} key={item.ID ?? ''}>
@@ -47,7 +43,7 @@ function SelectCategory() {
                                 </Option>
                             ))
                         ) : (
-                            <Option value="">Select Product Category</Option>
+                            <Option value="">No categories found</Option>
                         )}
                     </Select>
                 </Form.Item>

@@ -18,6 +18,9 @@ func main() {
 
 	r.Use(CORSMiddleware())
 
+	r.POST("/signin", controller.SignInOwner)
+
+
 	r.Static("/images", "./images")
 
 	router := r.Group("")
