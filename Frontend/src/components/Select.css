@@ -2,23 +2,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 10px; /* เว้นระยะห่างระหว่าง component */
-    flex-wrap: wrap; /* เพื่อให้ component ยืดหยุ่นเมื่อหน้าจอเล็กลง */
+    margin: 0 10px; /* Space between components */
+    flex-wrap: wrap; /* Flexibility when screen size reduces */
 }
 
-/* ปรับขนาดให้ยืดหยุ่น */
+/* Make the form items flexible */
 .SelectCate .ant-form-item, .SelectBrand .ant-form-item {
     width: 100%;
     margin-top: 35px;
-    max-width: 300px; /* จำกัดความกว้างสูงสุด */
+    max-width: 300px; /* Max width limit */
 }
 
+/* Label Styling */
 .SelectCate .ant-form-item-label, .SelectBrand .ant-form-item-label {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 8px;
 }
 
+/* Select dropdown styling */
 .SelectCate .ant-select, .SelectBrand .ant-select {
     width: 100%;
     border-radius: 4px;
@@ -31,28 +33,30 @@
     font-size: 16px;
 }
 
+/* Customize the dropdown arrow color */
 .SelectCate .ant-select-arrow, .SelectBrand .ant-select-arrow {
-    color: #FF2E63; 
+    color: #FF2E63; /* Highlight color */
 }
 
-/* Responsive Design */
+/* Responsive Design for medium screens */
 @media (max-width: 768px) {
     .SelectCate, .SelectBrand {
-        flex-direction: column; /* แสดงผลในแนวตั้งเมื่อหน้าจอเล็กลง */
-        align-items: flex-start;
+        flex-direction: column; /* Vertical layout on smaller screens */
+        align-items: flex-start; /* Align items to start */
     }
     
     .SelectCate .ant-form-item, .SelectBrand .ant-form-item {
-        max-width: 100%; /* ทำให้กว้างเต็มหน้าจอ */
+        max-width: 100%; /* Full width on small screens */
     }
 }
 
+/* Further adjustments for very small screens */
 @media (max-width: 480px) {
     .SelectCate .ant-form-item-label, .SelectBrand .ant-form-item-label {
-        font-size: 16px; /* ลดขนาด font */
+        font-size: 16px; /* Smaller font size */
     }
     
     .SelectCate .ant-select, .SelectBrand .ant-select {
-        font-size: 14px; /* ลดขนาด font */
+        font-size: 14px; /* Smaller font size for select dropdown */
     }
 }

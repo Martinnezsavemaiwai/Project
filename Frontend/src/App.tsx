@@ -9,10 +9,11 @@ import ProductEdit from './pages/edit/ProductEdit';
 function App() {
     return (
         <BrowserRouter>
-            <Routes>
+            <Routes>ProductList
                 <Route path="/" element={<ProductList/>} />
                 <Route path='/Product/Create' element={<ProductCreate/>} />
                 <Route path='/Product/Edit/:id' element={<ProductEdit/>} />
+                
             </Routes>
         </BrowserRouter>
     )

@@ -256,30 +256,27 @@ async function CreateImage(formData: FormData,id: Number | undefined) {
     return res;
   }
 
-  async function UpdateImage(formData: FormData, id: number) {
-    if (!id) {
-        console.error('Image ID is required to update');
-        return false;
-    }
-
-    const requestOptions = {
-        method: "PUT",
-        body: formData,
-    };
-
+  const UpdateImage = async (formData: FormData, id: number) => {
     try {
-        const res = await fetch(`${apiUrl}/product-image/${id}`, requestOptions);
-        if (res.status === 200) {
-            return await res.json();
-        } else {
-            console.error("Failed to update image:", res.status, res.statusText);
-            return false;
-        }
-    } catch (error) {
-        console.error('Error occurred while updating image:', error);
+      const response = await fetch(`${apiUrl}/product-image/${id}`, {
+        method: 'PUT',
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text(); // Or use response.json() if the error is in JSON format
+        console.error('Error response from server:', errorText);
         return false;
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Fetch error:', error);
+      return false;
     }
-}
+  };
+  
+  
 
 
 

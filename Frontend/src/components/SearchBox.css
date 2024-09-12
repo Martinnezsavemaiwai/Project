@@ -4,8 +4,8 @@
     margin-top: 22px;
     background-color: white;
     margin-left: 20px;
-    width: 100%; /* ใช้ 100% เพื่อให้ปรับขนาดตาม parent */
-    max-width: 550px; /* จำกัดความกว้างสูงสุด */
+    width: 100%; /* Take up 100% of the parent container */
+    max-width: 550px; /* Limit the maximum width */
     height: 40px;
     border: 2px solid var(--subtheme-color2);
     border-radius: 40px;
@@ -13,12 +13,12 @@
     display: flex;
     align-items: center;
     padding-left: 10px;
-    min-width: 320px;
-    box-sizing: border-box;
+    min-width: 320px; /* Ensure it doesn't shrink below this width */
+    box-sizing: border-box; /* Include padding and border in the width and height calculations */
 }
 
 .search-bar input {
-    flex: 1; /* ใช้ flex เพื่อให้ input ยืดหยุ่น */
+    flex: 1; /* Flexibility to take remaining space */
     border: none;
     font-size: 19px;
     height: 100%;
@@ -27,7 +27,7 @@
 }
 
 .search-bar input:focus-visible {
-    outline: none;
+    outline: none; 
 }
 
 .search-bar .img-box {
@@ -36,37 +36,38 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--subtheme-color3);
+    background-color: var(--subtheme-color3); /* Use the third theme color */
 }
 
 .search-bar .img-box img {
     width: 20px;
-    height: auto;
+    height: auto; 
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .search-bar {
-        width: 100%; /* ใช้เต็มความกว้างหน้าจอ */
+        width: 100%; /* Full width on medium screens */
         max-width: 100%;
-        margin-left: 0; /* ปรับให้ชิดขอบ */
+        margin-left: 0; /* Align to the edge */
     }
 }
 
 @media (max-width: 480px) {
     .search-bar {
-        height: 35px; /* ลดความสูง */
+        height: 35px; /* Reduce the height on very small screens */
     }
-    
+
     .search-bar input {
-        font-size: 16px; /* ลดขนาด font */
+        font-size: 16px; /* Decrease font size */
+        padding-left: 8px; /* Adjust padding for smaller screens */
     }
-    
+
     .search-bar .img-box {
-        width: 35px; /* ปรับขนาด icon */
+        width: 35px; /* Reduce the icon box size */
     }
-    
+
     .search-bar .img-box img {
-        width: 18px;
+        width: 18px; /* Slightly smaller icon for mobile */
     }
 }

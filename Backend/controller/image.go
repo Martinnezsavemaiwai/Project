@@ -96,69 +96,73 @@ func CreateImage(c *gin.Context){
 	c.JSON(http.StatusCreated, gin.H{"message": "Files uploaded successfully"})
 }
 
-// PUT product-image/:id
 func UpdateImage(c *gin.Context) {
-    imageID, err := strconv.ParseUint(c.Param("imageId"), 10, 64)
+    productID, err := strconv.ParseUint(c.Param("productId"), 10, 64)
     if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid image ID"})
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
         return
     }
 
     db := config.DB()
 
-    // Find the existing image
-    var image entity.Image
-    if err := db.First(&image, imageID).Error; err != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "Image not found"})
-        return
-    }
-
-    // Parse the new file from form
     form, err := c.MultipartForm()
     if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "No file is received"})
+        c.JSON(http.StatusBadRequest, gin.H{"error": "No files received"})
         return
     }
 
     files := form.File["image"]
+
     if len(files) == 0 {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "No image file provided"})
+        c.JSON(http.StatusBadRequest, gin.H{"error": "No image files provided"})
         return
     }
 
-    // Only take the first file for the update
-    file := files[0]
-    subfolder := "product" + strconv.Itoa(int(image.ProductID))
-    fileName := filepath.Base(file.Filename)
-    filePath := filepath.Join("images", "product", subfolder, fileName)
-
-    // Create folder if not exists
-    err = os.MkdirAll(filepath.Join("images", "product", subfolder), os.ModePerm)
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory"})
+    // Find existing images to delete
+    var existingImages []entity.Image
+    if err := db.Where("product_id = ?", productID).Find(&existingImages).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
         return
     }
 
-    // Remove the old file if it exists
-    if _, err := os.Stat(image.FilePath); err == nil {
-        if err := os.Remove(image.FilePath); err != nil {
-            c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove old image"})
+    // Delete old images
+    for _, img := range existingImages {
+        if err := os.Remove(img.FilePath); err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete old image"})
+            return
+        }
+        if err := db.Delete(&img).Error; err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete image record"})
             return
         }
     }
 
-    // Save new file
-    if err := c.SaveUploadedFile(file, filePath); err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
-        return
+    // Save new images
+    for _, file := range files {
+        subfolder := "product" + strconv.Itoa(int(productID))
+        fileName := filepath.Base(file.Filename)
+        filePath := filepath.Join("images", "product", subfolder, fileName)
+
+        err = os.MkdirAll(filepath.Join("images", "product", subfolder), os.ModePerm)
+        if err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory"})
+            return
+        }
+
+        if err := c.SaveUploadedFile(file, filePath); err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
+            return
+        }
+
+        image := entity.Image{
+            FilePath:  filePath,
+            ProductID: uint(productID),
+        }
+        if err := db.Create(&image).Error; err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+            return
+        }
     }
 
-    // Update the image record in the database
-    image.FilePath = filePath
-    if err := db.Save(&image).Error; err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update image in database"})
-        return
-    }
-
-    c.JSON(http.StatusOK, gin.H{"message": "Image updated successfully"})
+    c.JSON(http.StatusOK, gin.H{"message": "Files updated successfully"})
 }

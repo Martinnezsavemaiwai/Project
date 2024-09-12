@@ -56,7 +56,7 @@ function ProductCreate() {
       if (res) {
         messageApi.open({
           type: 'success',
-          content: 'บันทึกข้อมูลสำเร็จ',
+          content: 'บันทึกข้อมูลสินค้าสำเร็จ',
         });
       } else {
         messageApi.open({

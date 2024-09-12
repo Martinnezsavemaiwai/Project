@@ -64,7 +64,7 @@ function ProductEdit() {
   const onFinish = async (values: any) => {
     try {
       setLoading(true);
-  
+
       const updatedProduct: ProductInterface = {
         ...product,
         ProductName: values.ProductName,
@@ -74,33 +74,32 @@ function ProductEdit() {
         BrandID: values.BrandID,
         CategoryID: values.CategoryID,
       };
-  
-      // Update product information first
+
       const res = await UpdateProduct(Number(id), updatedProduct);
-      console.log('Product update response:', res);
-  
+
       if (res) {
-        // Update images if any
         if (images.length > 0) {
           const formData = new FormData();
           for (const image of images) {
-            formData.append('image', image.file); // Ensure that this matches the server-side field name
+            formData.append('image', image.file);
           }
-          
+
           // Update the image
           const imageRes = await UpdateImage(formData, Number(id));
-          
           if (!imageRes) {
             messageApi.open({
               type: 'error',
               content: 'Error occurred while updating images!',
             });
+          } else {
+            console.log('Image update response:', imageRes);
           }
+
         }
-  
+
         messageApi.open({
           type: 'success',
-          content: 'Product updated successfully',
+          content: 'สินค้าอัปเดตสำเร็จ',
         });
       } else {
         messageApi.open({
@@ -118,9 +117,9 @@ function ProductEdit() {
       setLoading(false);
     }
   };
-  
 
-  
+
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newImages = Array.from(e.target.files).map((file, index) => ({

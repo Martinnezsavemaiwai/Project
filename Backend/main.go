@@ -41,10 +41,10 @@ func main() {
 		router.GET("/owner/:id", controller.GetOwnerByID)
 
 		// Image Routes
-		router.GET("/images", controller.ListImages)
+		router.GET("/product-images", controller.ListImages)
 		router.GET("/product-images/:productId", controller.GetImageByProductByID)
 		router.POST("/product-image/:productId", controller.CreateImage)
-		router.PUT("/product-image/:id", controller.UpdateImage)
+		router.PUT("/product-image/:productId", controller.UpdateImage)
 	}
 
 	r.GET("/", func(c *gin.Context) {
